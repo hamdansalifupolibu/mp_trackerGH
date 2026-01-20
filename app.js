@@ -456,6 +456,48 @@ app.get('/api/metrics', async (req, res) => {
 
         metrics['Total Investment'] = totalInvestment;
 
+        // Calculate Estimated Beneficiaries
+        // Sum all beneficiary_count values from projects (excluding archived)
+        // Handle various formats: numbers, "1,500", "50K+", etc.
+        const [benefRows] = await pool.query(`
+            SELECT beneficiary_count 
+            FROM projects 
+            WHERE status != 'archived' 
+            AND beneficiary_count IS NOT NULL 
+            AND beneficiary_count != ''
+        `);
+
+        let totalBeneficiaries = 0;
+        benefRows.forEach(row => {
+            if (row.beneficiary_count) {
+                // Remove commas, 'K', 'M', '+' and convert to number
+                let val = String(row.beneficiary_count).toUpperCase().replace(/,/g, '').replace(/\+/g, '').trim();
+
+                if (val.includes('M')) {
+                    totalBeneficiaries += parseFloat(val.replace('M', '')) * 1000000;
+                } else if (val.includes('K')) {
+                    totalBeneficiaries += parseFloat(val.replace('K', '')) * 1000;
+                } else {
+                    const num = parseFloat(val);
+                    if (!isNaN(num)) totalBeneficiaries += num;
+                }
+            }
+        });
+
+        // Format the beneficiaries count
+        let formattedBeneficiaries;
+        if (totalBeneficiaries >= 1000000) {
+            formattedBeneficiaries = `${(totalBeneficiaries / 1000000).toFixed(1)}M+`;
+        } else if (totalBeneficiaries >= 1000) {
+            formattedBeneficiaries = `${Math.floor(totalBeneficiaries / 1000)}K+`;
+        } else if (totalBeneficiaries > 0) {
+            formattedBeneficiaries = totalBeneficiaries.toString();
+        } else {
+            formattedBeneficiaries = '0';
+        }
+
+        metrics['Estimated Beneficiaries'] = formattedBeneficiaries;
+
         res.json({ counts, metrics });
 
     } catch (err) {
@@ -764,7 +806,7 @@ app.delete('/api/users/:id', authMiddleware, verifySuperAdmin, async (req, res) 
 });
 
 // --- API 404 HANDLER ---
-app.use('/api/*', (req, res) => {
+app.use(/^\/api\/.*/, (req, res) => {
     res.status(404).json({ error: "API endpoint not found. Check route URL." });
 });
 

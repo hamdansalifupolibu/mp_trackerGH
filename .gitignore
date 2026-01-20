@@ -1,7 +1,52 @@
-node_modules
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
 .env
-mp_tracker.db
+.env.local
+.env.production
+
+# SQLite database (local development only)
+*.db
+*.sqlite
+*.sqlite3
+
+# Backups
 backups/
+*.backup
+
+# Logs
 logs/
 *.log
+npm-debug.log*
+crash.log
+server_error.log
+
+# OS files
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# User uploads (optional - uncomment if you don't want to track uploads)
+# uploads/
+
+# Test files
+*.test.js
+coverage/
+
+# Build files (if any)
+dist/
+build/

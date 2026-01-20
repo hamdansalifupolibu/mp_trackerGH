@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
+    host: process.env.DB_HOST || '127.0.0.1',
     user: process.env.DB_USER || 'u676982383_mpuser',
     password: process.env.DB_PASSWORD || 'Mptracker@123',
     database: process.env.DB_NAME || 'u676982383_mp_tracker',

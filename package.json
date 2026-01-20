@@ -1,7 +1,7 @@
 {
-  "name": "hon.-salifu-dandaawa",
+  "name": "mp-impact-tracker",
   "version": "1.0.0",
-  "description": "",
+  "description": "MP Impact & Development Tracker - Node.js Express Application",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -11,7 +11,16 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hamdansalifupolibu/mp_trackerGH.git"
+  },
+  "keywords": [
+    "express",
+    "nodejs",
+    "mysql",
+    "tracker"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
